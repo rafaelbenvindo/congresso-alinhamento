@@ -1,0 +1,6 @@
+{"files": [
+  {"file": "https://dadosabertos.camara.leg.br/arquivos/proposicoes/csv/proposicoes-{}.csv"},
+  {"file": "https://dadosabertos.camara.leg.br/arquivos/deputados/csv/deputados.csv"},
+  {"file": "https://dadosabertos.camara.leg.br/arquivos/votacoes/csv/votacoes-{}.csv"},
+  {"file": "https://dadosabertos.camara.leg.br/arquivos/votacoesVotos/csv/votacoesVotos-{}.csv"}
+]}
