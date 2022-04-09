@@ -1,8 +1,11 @@
 from pathlib import Path
 from datetime import date
+import psycopg2
 
 CONFIG_FILE = 'conf/config.json'
 DATA_DIR = ''
+
+connection = None
 
 
 def download_file(url, filename):
@@ -13,6 +16,9 @@ def download_file(url, filename):
 
 def execute_sql(sql):
     print('Executando sql: ' + sql)
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        connection.commit()
 
 
 def recreate_table_from_csv(file):
@@ -53,14 +59,16 @@ def initial_setup():
 
 def import_congress_files():
     import json
-
     initial_setup()
-
     config = json.load(open(CONFIG_FILE))
+
     global DATA_DIR
     DATA_DIR = config['data_dir']
-    for f in config['files']:
-        import_file(f['file'])
+
+    global connection
+    with psycopg2.connect(config['conn_string']) as connection:
+        for f in config['files']:
+            import_file(f['file'])
 
 
 if __name__ == '__main__':
