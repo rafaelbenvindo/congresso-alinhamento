@@ -2,7 +2,7 @@ from pathlib import Path
 from datetime import date
 
 CONFIG_FILE = 'conf/config.json'
-DATA_DIR = 'data'
+DATA_DIR = ''
 
 
 def download_file(url, filename):
@@ -55,8 +55,11 @@ def import_congress_files():
     import json
 
     initial_setup()
-    data_files = json.load(open(CONFIG_FILE))
-    for f in data_files['files']:
+
+    config = json.load(open(CONFIG_FILE))
+    global DATA_DIR
+    DATA_DIR = config['data_dir']
+    for f in config['files']:
         import_file(f['file'])
 
 
