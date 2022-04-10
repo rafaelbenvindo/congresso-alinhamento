@@ -23,7 +23,7 @@ def execute_sql(sql):
 
 
 def recreate_table_from_csv(file, table_name):
-    with open(file, 'r', encoding='utf-8') as file:
+    with open(file, 'r', encoding='utf-8-sig') as file:
         headers = file.readline().strip()
     print(f'Criando tabela {table_name} com headers {headers}...')
     headers = headers.replace('"', '').split(';')
@@ -39,7 +39,8 @@ def run_command(cmd):
 
 
 def load_table_from_file(filepath, table_name):
-    cmd = f"psql -c \"\copy {table_name} from '{filepath}' WITH (FORMAT CSV, DELIMITER ';', HEADER, NULL '', ENCODING 'UTF8')\" " \
+    cmd = f"psql -c \"\copy {table_name} from '{filepath}' " \
+           " WITH (FORMAT CSV, DELIMITER ';', HEADER, NULL '', ENCODING 'UTF8')\" " \
           f"\"{config['conn_string']}\""
     run_command(cmd)
 
@@ -53,7 +54,6 @@ def import_file(url):
     else:
         filedate = None
 
-    # if True:
     if today != filedate:
         download_file(url, filepath)
         import re
@@ -69,23 +69,24 @@ def create_dir(dirname):
 
 
 def initial_setup():
-    create_dir(DATA_DIR)
-
-
-def import_congress_files():
     import json
-    initial_setup()
+
     global config
     config = json.load(open(CONFIG_FILE))
 
     global DATA_DIR
     DATA_DIR = config['data_dir']
+    create_dir(DATA_DIR)
 
     global connection
-    with psycopg2.connect(config['conn_string']) as connection:
-        for f in config['files']:
-            import_file(f['file'])
+    connection = psycopg2.connect(config['conn_string'])
 
 
+def import_congress_files():
+    for f in config['files']:
+        import_file(f['file'])
+
+
+initial_setup()
 if __name__ == '__main__':
     import_congress_files()

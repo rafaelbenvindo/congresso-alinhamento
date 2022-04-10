@@ -1,10 +1,10 @@
-import unittest
 import main
+import unittest
 
 
 class TestCreateTable(unittest.TestCase):
-    def test_create_table(self):
-        main.create_table_from_csv('votacoes', '"id";"nome"')
+    def test_recreate_table_from_csv(self):
+        pass
 
 
 if __name__ == '__main__':
